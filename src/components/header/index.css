@@ -1,0 +1,20 @@
+.header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  position: sticky;
+  background-color: #171717;
+  top: 0;
+}
+.left-header {
+  display: flex;
+  align-items: center;
+}
+
+.right-header {
+  display: flex;
+  align-items: center;
+}
+
+.header-text {
+  margin-left: 10px;
+}
