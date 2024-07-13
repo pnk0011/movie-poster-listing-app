@@ -3,3 +3,24 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
+
+.thumbnail {
+  width: 100%; /* Or set a specific width, e.g., 200px */
+  padding-top: 150%; /* 3/2 = 1.5 = 150% to achieve a 2:3 ratio */
+  position: relative;
+  overflow: hidden;
+}
+
+.thumbnail img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.movie-name {
+  text-align: left;
+}

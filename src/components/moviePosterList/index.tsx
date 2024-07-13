@@ -44,14 +44,16 @@ export default function MoviePosterList() {
         ? moviePosterList.map((item: any, index: number) => {
             return (
               <div key={index}>
-                <img
-                  src={
-                    "https://test.create.diagnal.com/images/" +
-                    item["poster-image"]
-                  }
-                  alt="Movie Poster"
-                />
-                <p>{item.name}</p>
+                <div className="thumbnail">
+                  <img
+                    src={
+                      "https://test.create.diagnal.com/images/" +
+                      item["poster-image"]
+                    }
+                    alt="Movie Poster"
+                  />
+                </div>
+                <p className="movie-name">{item.name}</p>
               </div>
             );
           })
