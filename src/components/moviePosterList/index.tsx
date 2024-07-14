@@ -1,63 +1,82 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState, useRef } from "react";
 import "./index.css";
-interface ContentItem {
+import { getMoviePosterList } from "../../apis/moviePosterAPI";
+import {
+  MISSING_MOVIE_POSTER_IMAGRE,
+  MOVIE_POSTER_IMAGE_URL,
+} from "../../constants/constants";
+
+interface MoviePoster {
   name: string;
   "poster-image": string;
 }
 
-interface ContentItems {
-  content: ContentItem[];
+interface MoviePosterListProp {
+  searchText: string;
 }
 
-interface Page {
-  title: string;
-  "total-content-items": string;
-  "page-num-requested": string;
-  "page-size-requested": string;
-  "page-size-returned": string;
-  "content-items": ContentItems;
-}
+const MoviePosterList: React.FC<MoviePosterListProp> = ({ searchText }) => {
+  const [moviePosters, setMoviePosters] = useState<MoviePoster[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const allMovieList = useRef<MoviePoster[]>([]);
+  const isAllListFetched = useRef(false);
 
-interface ApiResponse {
-  page: Page;
-}
-
-export default function MoviePosterList() {
-  const [moviePosterList, setMoviePosterList] = useState<any>([]);
-  const loadMoviePosterList = async () => {
-    const MoviePosterListData = await axios.get(
-      "https://test.create.diagnal.com/data/page1.json"
-    );
-    console.log(
-      "MoviePosterListData",
-      MoviePosterListData.data.page["content-items"].content
-    );
-    setMoviePosterList(MoviePosterListData.data.page["content-items"].content);
+  const getMoviePosterListData = async (pageNumber: number) => {
+    const data = await getMoviePosterList(pageNumber);
+    if (!data.length) {
+      isAllListFetched.current = true;
+      return;
+    }
+    allMovieList.current = [...moviePosters, ...data];
+    setMoviePosters([...moviePosters, ...data]);
   };
+
   useEffect(() => {
-    loadMoviePosterList();
+    getMoviePosterListData(page);
+  }, [page]);
+
+  useEffect(() => {
+    const filteredData = allMovieList.current.filter((movie) =>
+      movie.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+    console.log("filteredData", filteredData);
+    setMoviePosters(filteredData);
+  }, [searchText]);
+
+  const handleUserScroll = () => {
+    if (
+      window.innerHeight + window.scrollY >= document.body.offsetHeight &&
+      !isAllListFetched.current
+    ) {
+      setPage((prev) => prev + 1);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleUserScroll);
+    return () => window.removeEventListener("scroll", handleUserScroll);
   }, []);
+
   return (
     <div className="movie-poster-wrapper">
-      {moviePosterList.length
-        ? moviePosterList.map((item: any, index: number) => {
-            return (
-              <div key={index}>
-                <div className="thumbnail">
-                  <img
-                    src={
-                      "https://test.create.diagnal.com/images/" +
-                      item["poster-image"]
-                    }
-                    alt="Movie Poster"
-                  />
-                </div>
-                <p className="movie-name">{item.name}</p>
-              </div>
-            );
-          })
-        : null}
+      {moviePosters.map((poster, index) => (
+        <div key={index} className="movie-poster-item">
+          <div className="thumbnail">
+            <img
+              src={MOVIE_POSTER_IMAGE_URL + poster["poster-image"]}
+              alt={`${poster.name} Poster`}
+              loading="lazy" // Lazy loading attribute
+              onError={(e) => {
+                e.currentTarget.src = MISSING_MOVIE_POSTER_IMAGRE; // Fallback image url
+                e.currentTarget.alt = "Fallback Image"; // Fallback alt text
+              }}
+            />
+          </div>
+          <p className="movie-name">{poster.name}</p>
+        </div>
+      ))}
     </div>
   );
-}
+};
+
+export default MoviePosterList;

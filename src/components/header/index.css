@@ -19,3 +19,22 @@
 .header-text {
   margin-left: 10px;
 }
+
+.header-wrapper-search {
+  display: flex;
+  justify-content: space-between;
+  position: sticky;
+  background-color: #171717;
+  top: 0;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.right-header-search {
+  margin-left: 20px;
+}
+
+.left-header-search {
+  transition: transform 0.3s ease;
+  transform: translateX(-10px);
+}
