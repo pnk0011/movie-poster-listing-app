@@ -27,6 +27,7 @@ p {
 }
 
 .movie-name {
+  text-align: left;
 }
 .no-match-found {
   position: absolute;
