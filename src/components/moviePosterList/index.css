@@ -27,11 +27,6 @@ p {
 }
 
 .movie-name {
-  text-align: left;
-  width: 9rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .no-match-found {
   position: absolute;
