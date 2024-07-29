@@ -1,44 +1,51 @@
 import BackArrow from "../../assets/images/back-arrow.png";
 import SearchIcon from "../../assets/images/search-icon.png";
-import "./index.css";
+import CrossIcon from "../../assets/images/cross-icon.svg";
 import { useState } from "react";
+import "./index.css";
 
-type AppHeaderProp = {
-  setSearchText: React.Dispatch<React.SetStateAction<string>>;
+type AppHeaderProps = {
+  setSearchText: (text: string) => void;
 };
 
-const AppHeader: React.FC<AppHeaderProp> = ({ setSearchText }) => {
+const AppHeader: React.FC<AppHeaderProps> = ({ setSearchText }) => {
   const [isSearchActive, setIsSearchActive] = useState(false);
-
   const handleSearchClick = () => {
     setIsSearchActive(true);
   };
+  const handleCrossClick = () => {
+    setIsSearchActive(false);
+    setSearchText("");
+  };
   return (
     <>
-      {!isSearchActive ? (
-        <div className="header-wrapper">
-          <div className="left-header">
-            <img src={BackArrow} alt="back arrow" height="30px" />
-            <h2 className="header-text">Romantic Comedy</h2>
-          </div>
-          <div className="right-header" onClick={handleSearchClick}>
-            <img src={SearchIcon} alt="search icon" height="30px" />
-          </div>
+      <div className="header-wrapper">
+        <div className="left-header">
+          <img src={BackArrow} alt="back arrow" height="20px" />
+          <h2 className="title">Romantic Comedy</h2>
         </div>
-      ) : (
-        <div className="header-wrapper-search">
-          <div className="left-header-search">
-            <img src={SearchIcon} alt="search icon" height="30px" />
-          </div>
-          <div className="right-header-search">
+        {isSearchActive ? (
+          <div className="search-input-wrapper">
             <input
               type="text"
               width={"200px"}
               onChange={(e) => setSearchText(e.target.value)}
+              className="search-input"
+              autoFocus
+            />
+            <img
+              src={CrossIcon}
+              alt="search icon"
+              className="cross-icon"
+              onClick={handleCrossClick}
             />
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="right-header" onClick={handleSearchClick}>
+            <img src={SearchIcon} alt="search icon" height="20px" />
+          </div>
+        )}
+      </div>
     </>
   );
 };
