@@ -22,7 +22,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ setSearchText }) => {
       <div className="header-wrapper">
         <div className="left-header">
           <img src={BackArrow} alt="back arrow" height="20px" />
-          <h2 className="title">Romantic Comedy</h2>
+          {!isSearchActive && <h2 className="title">Romantic Comedy</h2>}
         </div>
         {isSearchActive ? (
           <div className="search-input-wrapper">

@@ -1,11 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { getMoviePosterList } from "../../apis/moviePosterAPI";
+import Poster from "../poster/index";
 import "./index.css";
-import {
-  MISSING_MOVIE_POSTER_IMAGRE,
-  MOVIE_POSTER_IMAGE_URL,
-} from "../../constants/constants";
-
 interface MoviePoster {
   name: string;
   "poster-image": string;
@@ -22,7 +18,6 @@ const MoviePosterList: React.FC<MoviePosterListProp> = ({ searchText }) => {
   const [page, setPage] = useState<number>(1);
   const allMovieList = useRef<MoviePoster[]>([]);
   const isAllListFetched = useRef(false);
-  const [prefetchedImage, setPrefetchedImage] = useState<string>("");
 
   const getMoviePosterListData = async (pageNumber: number) => {
     if (initialLoad.current) {
@@ -71,21 +66,7 @@ const MoviePosterList: React.FC<MoviePosterListProp> = ({ searchText }) => {
       {isLoading && <span className="loader"></span>}
       {!isLoading &&
         moviePosters.map((poster, index) => (
-          <div key={index} className="movie-poster-item">
-            <div className="thumbnail">
-              <img
-                src={MOVIE_POSTER_IMAGE_URL + poster["poster-image"]}
-                alt={`${poster.name} Poster`}
-                loading="lazy" // Lazy loading attribute
-                onLoadStart={(e) => (e.currentTarget.src = prefetchedImage)}
-                onError={(e) => {
-                  e.currentTarget.src = MISSING_MOVIE_POSTER_IMAGRE; // Fallback image url
-                  e.currentTarget.alt = "Error while loading image"; // Fallback alt text
-                }}
-              />
-            </div>
-            <p className="movie-name">{poster.name}</p>
-          </div>
+          <Poster poster={poster} key={index} />
         ))}
       {!isLoading && moviePosters.length === 0 && (
         <span className="no-match-found">No match found :(</span>
